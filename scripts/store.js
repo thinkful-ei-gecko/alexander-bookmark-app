@@ -21,20 +21,12 @@ let store = {
       rating: 3
     }
   ],  
-  /* Default state on index.html
-  * 
-  * - detailed:
-  * Whether or not the 'condensed' or 'detailed' view is
-  * displayed on the DOM.
-  * 
-  * When set true (from false):
-  *  - Connect to store on server; check status.
-  *  - Catch error if unable to load; load error code and message.
-  *  - Pulls 'description' & 'url_link' from store.bookmarkList[item].
-  *  - Feeds into html template; template returned
-  *  - Render page with new template.
-  */
-  detailed: false,
-  ratingFilter: false,
-  error: false
+
+  noItems: true,
+  detailed: { //changes view of an element when 'expand' button clicked.
+    detailedView: false,
+    idForDetailed: id //id of bookmark whose expand button was clicked.
+  },
+  ratingFilter: ratingNumber, //Number passed from filter input.
+  error: errorCode, errorMessage //Messages passed from error.
 };

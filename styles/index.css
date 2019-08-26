@@ -2,6 +2,22 @@
     box-sizing: border-box;
 }
 
+header, footer, main {
+    max-width: 320px;
+}
+
+footer {
+    min-height: 150px;
+}
+
+form {
+    display: flex;
+    flex-flow: column;
+}
+
+button {
+    max-width: 100px;
+}
 
 /* Sections */
 

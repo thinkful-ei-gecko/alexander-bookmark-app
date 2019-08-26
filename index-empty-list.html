@@ -21,19 +21,17 @@
     <main class="wf-constant">
         <span class="wf-tag block">main</span>
         <section id="item-add" class="wf-js-loaded">
-            <span class="wf-tag">section.#item-add
-                <br>
-                Uses a form rendering function to load on page initialization along with other forms.</span>
+            <span class="wf-tag">section.#item-add, uses <em>render()</em> to load on page init</span>
             <h2>Add Items</h2>
             <form id = "item-add-form">
                 <label for="item-title" class="bookmark-label">Title</label>
-                <input id="item-title" name="item-title" class="bookmark-text-input" type="text" placeholder="Title (Valid string)" required>
+                <input id="item-title" name="item-title" class="bookmark-text-input" type="text" placeholder="Title (Valid string)">
                 
                 <label for="item-url" class="bookmark-label">Url</label>
-                <input id="item-url" name="item-url" class="bookmark-text-input" type="text" placeholder="Url (Validate string in url format, sanitized)" required>
+                <input id="item-url" name="item-url" class="bookmark-text-input" type="text" placeholder="Url (Validate string in url format, sanitized)">
 
                 <fieldset id="item-rating"><legend>Rating</legend>
-                    <input type="radio" name="item-rating" value="1" required>1</option>
+                    <input type="radio" name="item-rating" value="1">1</option>
                     <input type="radio" name="item-rating" value="2">2</option>
                     <input type="radio" name="item-rating" value="3">3</option>
                     <input type="radio" name="item-rating" value="4">4</option>
@@ -53,9 +51,11 @@
                 <span class="wf-tag">
                     section#item-filter-rating
                     <br>
-                    - Filters list by rating input in 'select' below; will reload page on submit.
+                    - Filters list by rating input in 'select' below; will reload page on submit:
                     <br>
-                    -Validition: Must be number 1-5, else <a href="index-feedback-failure">throw error</a>.
+                    <em>on.submit('#item-filter-form')</em>
+                    <br>
+                    -Validition: Must be number 1-5
                 </span>
                 <label for="item-rating" class="bookmark-label">Rating</label>
                 <select id="item-rating" name="item-rating">
@@ -82,19 +82,16 @@
                     <p class="item-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
                     <span class="item-rating" data-rating="1"></span>
                     <a href="#" id="js-expand-item-1"></a>
-                    <button type="button" id="item-1">Delete</button>
                 </li>
                 <li id="item-2" class="item">
                     <h3>Example 2</h3>
                     <p class="item-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
                     <span class="item-rating" data-rating="2"></span>
-                    <button type="button" id="item-2">Delete</button>
                 </li>
                 <li id="item-3" class="item">
                     <h3>Example 3</h3>
                     <p class="item-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
                     <span class="item-rating" data-rating="3"></span>
-                    <button type="button" id="item-3">Delete</button>
                 </li>
             </ul>
         </section><!--item-list-->
@@ -109,7 +106,8 @@
             <a href="index.html" target=”_blank”>Index (with list items)</a>
             <a href="index-empty-list.html" target=”_blank”>Index (without list items)</a>
             <a href="index-item-added.html" target=”_blank”>Index (after successfully adding item)</a>
-            <a href="index-list-filtered.html" target=”_blank”>Index (after filtering using the 'Filter by Rating' form.)</a>
+            <a href="index-item-added-error.html" target=”_blank”>Index (after attempting to add item with error.)</a>
+            <a href="index-item-deleted.html" target=”_blank”>Index (after successfully deleting item)</a>
             <a href="index-item-deleted-error.html" target=”_blank”>Index (after attempting to remove item with error.)</a>
             <div class="wf-legend">
             <h3>Legend:</h3>
