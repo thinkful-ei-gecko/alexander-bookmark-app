@@ -64,3 +64,5 @@ Use semantic HTML
  - 2019-08-26 07:42:11 - Created wireframe directory and populated with estimated app states.
 
  - 2019-08-26 07:49:58 - Added assignment requirements to README.me
+
+ - 2019-08-26 11:18:10 - index.html wireframe composed. Structure for 'store' constant defined.

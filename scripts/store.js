@@ -27,10 +27,14 @@ let store = {
   * Whether or not the 'condensed' or 'detailed' view is
   * displayed on the DOM.
   * 
-  * When true (from false):
-  *  - Pulls 'description' & 'url_link' from store.bookmarkList.
-  *  - Feeds into html template; returned
-  *  - Template inserted into correct list item on DOM.
+  * When set true (from false):
+  *  - Connect to store on server; check status.
+  *  - Catch error if unable to load; load error code and message.
+  *  - Pulls 'description' & 'url_link' from store.bookmarkList[item].
+  *  - Feeds into html template; template returned
+  *  - Render page with new template.
   */
   detailed: false,
+  ratingFilter: false,
+  error: false
 };

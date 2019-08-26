@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>MyMarks 0.0, the Best Bookmark App Ever (default index w/ list)</title>
+    <link rel="stylesheet" type="text/css" href="styles/normalize.css">
+    <link rel="stylesheet" type="text/css" href="styles/index.css">
+
+</head>
+<body>
+    <header role="banner">
+        <h1>MyMarks v. 0.0</h1>
+        <span class="subtitle">The Best Bookmark App Ever</span>
+        <p>Light copy about how great this app is and how to use it.</p>
+    </header>
+    <main>
+        <section id="item-add">
+            <h2>Add Items</h2>
+            <form id = "item-add-form">
+                <label for="item-title" class="bookmark-label">Title</label>
+                <input id="item-title" name="item-title" class="bookmark-text-input" type="text" placeholder="Title (Valid string)">
+                
+                <label for="item-url" class="bookmark-label">Url</label>
+                <input id="item-url" name="item-url" class="bookmark-text-input" type="text" placeholder="Url (Validate string in url format, sanitized)">
+
+                <label for="item-rating" class="bookmark-label">Rating</label>
+                <select id="item-rating" name="item-rating">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+                
+                <button type="submit">Add Item</button>
+            </form>
+        </section><!--item-add-->
+        <section id="item-filter-rating">
+            <h2>Filter List by Rating</h2>
+            <form id="item-filter-form">
+                <label for="item-rating" class="bookmark-label">Rating</label>
+                <select id="item-rating" name="item-rating">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+                <button type="submit">Filter</button>
+            </form>
+        </section><!--item-filter-rating-->
+        <ul id="item-list">
+            <li class="item" id="js-item-1">
+                <h3>Example 1</h3>
+                <p class="item-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                <span class="item-rating" data-rating="1"></span>
+                <a href="#" id="js-expand-item-1"></a>
+            </li>
+            <li>
+                <h3>Example 2</h3>
+                <p class="item-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                <span class="item-rating" data-rating="2"></span>
+            </li>
+            <li>
+                <h3>Example 3</h3>
+                <p class="item-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                <span class="item-rating" data-rating="3"></span>
+            </li>
+        </ul> <!--item-list-->
+    </main>
+    <footer role="contentinfo">
+        Created by Alex Fukui for Thinkful.
+    </footer>
+    
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous" type="text/javascript"></script>
+    <script src="scripts/store.js" type="text/javascript"></script>
+    <script src="scripts/index.js" type="text/javascript"></script>
+</body>
+</html>

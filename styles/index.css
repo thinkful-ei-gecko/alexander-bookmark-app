@@ -1,0 +1,38 @@
+* {
+    box-sizing: border-box;
+}
+
+
+/* Sections */
+
+.subtitle {
+    font-size: 1.5em;
+}
+
+/* Forms */
+.bookmark-label {}
+
+/* List Items */
+
+.item-rating {
+
+}
+
+.item-rating[data-rating="1"]::after {
+    content: "x----";
+}
+.item-rating[data-rating="2"]::after {
+    content: "xx---";
+}
+
+.item-rating[data-rating="3"]::after {
+    content: "xxx--";
+}
+
+.item-rating[data-rating="4"]::after {
+    content: "xxxx-";
+}
+
+.item-rating[data-rating="5"]::after {
+    content: "xxxxx";
+}
