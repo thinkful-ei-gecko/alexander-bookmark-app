@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>MyMarks 0.0, the Best Bookmark App Ever (default index w/o list)</title>
+    <title>MyMarks 0.0, the Best Bookmark App Ever (default index w/ list)</title>
     <link rel="stylesheet" type="text/css" href="styles/normalize.css">
     <link rel="stylesheet" type="text/css" href="styles/index.css">
     <!--Remove this last style before publishing.-->
@@ -19,9 +19,35 @@
         <p>Light copy about how great this app is and how to use it.</p>
     </header>
     <main class="wf-constant">
+        <section id="error" class="wf-changed">
+            <span class="wf-tag">
+                section#error
+                <br>
+                Loads when error detected during any event using a catch.
+                <br>
+                Obj: {error: errorCode, errorMessage}
+                <br>
+                Conditions:
+                <br>
+                -Fail to connect to server.
+                <br>
+                -Failure based on code.
+                <br>
+                -Fail to add item (missing inputs, bad url)
+                <br>
+                -Fail to delete item.
+
+            </span>
+            <h2>Error!</h2>
+            <p>Sorry, something's gone wrong.</p>
+            <h3>Error Code: 500</h3>
+            <p>There was a problem connecting to the server.</p>
+        </section>
         <span class="wf-tag block">main</span>
         <section id="item-add" class="wf-js-loaded">
-            <span class="wf-tag">section.#item-add</span>
+            <span class="wf-tag">section.#item-add
+                <br>
+                Uses a form rendering function to load on page initialization along with other forms.</span>
             <h2>Add Items</h2>
             <form id = "item-add-form">
                 <label for="item-title" class="bookmark-label">Title</label>
@@ -42,17 +68,64 @@
                 <button type="submit">Add Item</button>
             </form>
         </section><!--item-add-->
-        <span class="wf-tag">Note that section#item-filter-rating does not load when there are no items to filter.</span>
+        <section id="item-filter-rating" class="wf-js-loaded">
+            <span class="wf-tag">
+                section#item-filter-rating
+            </span>
+            <h2>Filter by Rating</h2>
+            <form id="item-filter-form">
+                <span class="wf-tag">
+                    section#item-filter-rating
+                    <br>
+                    - Filters list by rating input in 'select' below; will reload page on submit.
+                    <br>
+                    -Validition: Must be number 1-5, else <a href="index-feedback-failure">throw error</a>.
+                </span>
+                <label for="item-rating" class="bookmark-label">Rating</label>
+                <select id="item-rating" name="item-rating">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+                <button type="submit">Filter</button>
+            </form>
+        </section><!--item-filter-rating-->
         <section id="item-list" class="wf-js-loaded">
             <span class="wf-tag">section#item-list</span>
-            <span class="wf-tag">
-                Condition - if the array of bookmarks is empty, return message below.
-                <br>
-                Obj: {noBookmarks: true} //Is false whenever any bookmark exists in list.
-                <br>
-            </span>
             <h2>Your Bookmarks</h2>
-                <p>You haven't entered any bookmarks yet. Use the form above to submit a bookmark.</p>
+            <ul id="item-list">
+                <span class="wf-tag">
+                    ul#item-list
+                    <br>
+                    Uses template literal to iterate over store.bookmarkList for each item.
+                </span>
+                <li id="item-1" class="item">
+                    <h3>Example 1</h3>
+                    <p class="item-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                    <span class='rating-title'>Rating:</span>
+                    <span class="item-rating" data-rating="1"></span>
+                    <a href="#" id="js-expand-item-1"></a>
+                    <br>
+                    <button type="button" id="item-1">Delete</button>
+                </li>
+                <li id="item-2" class="item">
+                    <h3>Example 2</h3>
+                    <p class="item-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                    <span class='rating-title'>Rating:</span>
+                    <span class="item-rating" data-rating="2"></span>
+                    <br>
+                    <button type="button" id="item-2">Delete</button>
+                </li>
+                <li id="item-3" class="item">
+                    <h3>Example 3</h3>
+                    <p class="item-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                    <span class='rating-title'>Rating:</span>
+                    <span class="item-rating" data-rating="3"></span>
+                    <br>
+                    <button type="button" id="item-3">Delete</button>
+                </li>
             </ul>
         </section><!--item-list-->
     </main>
