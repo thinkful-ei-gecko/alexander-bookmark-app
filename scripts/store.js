@@ -1,33 +1,19 @@
 'use strict';
-/* global $ */
+/* global $ bookmarkList */
 
 const store = (function() {
-  const bookmarkList = [
-    {
-      id: 'someuniqueid1',
-      title: 'Example 1',
-      urlLink: 'http://example1.com',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-      rating: 3
-    },
-    { 
-      id: 'someuniqueid3',
-      title: 'Example 2',
-      urlLink: 'http://example2.com',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-      rating: 3
-    },
-    {
-      id: 'someuniqueid2',
-      title: 'Example 3',
-      urlLink: 'http://example3.com',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-      rating: 3
-    }
-  ];  
 
-  const noBookmarks = function() {
-    // if this.bookmarkList: false;
+  const addBookmark = function(bookmark){
+    this.bookmarks.push(bookmark);
+    bookmarkList.render();
+  };
+
+  const findById = function(id) {
+    return this.bookmarks.find(bookmark => bookmark.id === id);
+  };
+
+  const findAndDelete = function(id) {
+    this.bookmarks = this.bookmarks.filter(bookmark => bookmark.id !== id);
   };
 
   const toggleFormTemplate = function() {
@@ -41,7 +27,7 @@ const store = (function() {
         <input id="bookmark-url" name="bookmark-url" class="bookmark-text-input" type="text" placeholder="Url (Validate string in url format, sanitized)" required>
   
         <fieldset id="bookmark-rating"><legend>Rating</legend>
-          <input type="radio" name="bookmark-rating" value="1" required>1</option>
+          <input type="radio" name="bookmark-rating" value="1">1</option>
           <input type="radio" name="bookmark-rating" value="2">2</option>
           <input type="radio" name="bookmark-rating" value="3">3</option>
           <input type="radio" name="bookmark-rating" value="4">4</option>
@@ -69,7 +55,16 @@ const store = (function() {
     console.log('bookmark pushed.');
   };
 
+  const setError= function(error){
+    $('main').prepend(`Error message: ${error}`);
+  };
+
   return {
-    toggleFormTemplate
+    bookmarks: [],
+    ratingFilter: { active: false, ratingMin: 0},
+    addBookmark,
+    findAndDelete,
+    toggleFormTemplate,
+    setError
   };
 })();

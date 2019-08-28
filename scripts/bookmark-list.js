@@ -2,79 +2,162 @@
 /* global $ store api */
 
 //Renders individual bookmark listing in condensed format
-function listRender() {
-  console.log('listRender firing up');
-  let bookmarks = [...store.bookmarkList()];
-}
+const bookmarkList = (function(){
 
-/* Handlers */
-//Renders bookmark list
-// function bookmarkListRender() {
-//   console.log('listRender firing');
-// }
+  function render() {
+    let bookmarks = [...store.bookmarks];
 
-//Toggles an bookmark view from expanded to not.
-// function handleExpandedView(){
-//   console.log('handleExpandedView listening');
-// }
+    if (store.ratingFilter.active && store.ratingFilter.minimum !== 0) {
+      bookmarks = bookmarks.filter(bookmark => bookmark.rating >= store.ratingFilter.ratingMin);
+    }
 
-//Query list by rating, wash your hands.
-// function handleFilterList() {
-//   console.log('handleFilterList listening');
-// }
+    const bookmarkTemplate = generateBookmarkTemplate(bookmarks);
+    $('#bookmark-list').remove();
+    $('#your-bookmarks h2').after(bookmarkTemplate);
+  }
 
-//Toggle bookmark form, add bookmark from form, wash your hands.
-function handleAddBookmark() {
-  $('#bookmark-add a').click( () => {
-    console.log('addBookmark listening');
-    store.toggleFormTemplate();
-    submitAddBookmark();
-  });
-}
+  //Toggles an bookmark view from expanded to not.
+  // function handleExpandedView(){
+  //   console.log('handleExpandedView listening');
+  // }
 
-//Renders add form
-function submitAddBookmark() {
-  $('#bookmark-add-form').submit(function(event) {
-    event.preventDefault();
-    let title = $('#bookmark-title').val();
-    let linkUrl = $('#bookmark-url').val();
-    let rating = $('input[name=bookmark-rating]:checked').val();
-    let description = $('#bookmark-description').val();
+  //Query list by rating, wash your hands.
+  function handleFilterList() {
+    console.log('handleFilterList listening');
+    $('#bookmark-filter-form').submit( (event)=> {
+      event.preventDefault();
+      let minimum = $('#bookmark-rating').val();
+      console.log('handleFilterList fired');
+      if (!store.ratingFilter.active) {
+        store.ratingFilter.active = true;
+        store.ratingFilter.ratingMin = minimum;
+        render();
+      } else {
+        store.ratingFilter.ratingMin = minimum;
+        render();
+      }
+    });
+  }
 
-    //test read okay
-    // console.log(title, linkUrl, rating, description);
+  function handleFilterCancel() {
+    $('#cancel-filter').click( () => {
+      store.ratingFilter.active = false;
+      render();
+    });
+  }
 
-    //create bookmark method
-    api.createBookmark(title, linkUrl, description, rating)
-      .then(res => res.json())
-      .then( (newItem) => {
-        store.addItem(newItem);
-        $('#bookmark-title').val('');
-        $('#bookmark-url').val('');
-        $('#bookmark-rating').val('');
-        $('#bookmark-description').val('');
-        // renderList();
-      })
-      .catch(err => {
-        //console.log(err);
-        store.setError(err);
-        // renderList();
-      });
+  //Toggle bookmark form, add bookmark from form, wash your hands.
+  function handleAddBookmark() {
+    $('#bookmark-add a').click( () => {
+      store.toggleFormTemplate();
+      //Listens for bookmark submit.
+      handleSubmitAddBookmark();
+    });
+  }
 
-    console.log('bookmark submitted!(in theory)');
-  });
-}
+  function getIdFromElement(bookmark) {
+    return $(bookmark)
+      .closest('.bookmark')
+      .data('bookmark-id');
+  }
 
-//Removes a bookmark, wash your hands.
-// function handleDeleteBookmark(){
-//   console.log('handleDeleteBookmark is listening');
-// }
+  function handleDeleteBookmark() {
+    console.log('handleDeleteBookmark listening');
+    $('#your-bookmarks').on('click', '.delete-bookmark', event => {
+      // get the index of the item in store.items
+      console.log('delete bookmark firing');
+      const id = getIdFromElement(event.currentTarget);
+      // delete the item
+      api.deleteBookmark(id)
+        .then(() => {
+          store.findAndDelete(id);
+          // render the updated bookmark list
+          render();
+        })
+        .catch(err => {
+          store.setError(err);
+          render();
+        });
+    });
+  }
 
-function handleEvents() {
-  handleAddBookmark();
-  // handleFilterList();
-  // handleExpandedView();
-  // handleDeleteBookmark();
-}
+  function generateBookmarkTemplate(bookmarks) {
+    const bookmarksHtml = bookmarks.map((bookmark) => generateBookmarkElement(bookmark));
+    bookmarksHtml.join('');
+    return `
+    <ul id="bookmark-list">
+    ${bookmarksHtml}
+    </ul>
+    `;
+  }
 
-$(handleEvents());
+  function generateBookmarkElement(bookmark) {
+    //This is expanded view by default for testing.
+    let description = '<p class="bookmark-description">No description.</p>';
+    if (bookmark.desc){
+      description = `<p class="bookmark-description">${bookmark.desc}</p>`;
+    }
+    let rating = 'Unrated';
+    if (bookmark.rating){
+      rating = bookmark.rating;
+    }
+
+    return `<li data-bookmark-id="${bookmark.id}" class="bookmark">
+    <a href="#" class="expand-bookmark"><h3>${bookmark.title}</h3></a>
+      <a href="${bookmark.url}">${bookmark.url}</a>
+      ${description}
+      <span class="rating-title">Rating</span>
+      <span class="bookmark-rating" data-rating="${rating}">${rating}</span>
+      <button type="button" class="delete-bookmark">Delete</button>
+    </li>`;
+  }
+
+  //Renders add form
+  function handleSubmitAddBookmark() {
+    $('#bookmark-add-form').submit( (event) => {
+      event.preventDefault();
+      let newTitle = $('#bookmark-title').val();
+      let newLinkUrl = $('#bookmark-url').val();
+      let newRating = $('input[name=bookmark-rating]:checked').val();
+      let newDescription = $('#bookmark-description').val();
+      let newBookmark = {
+        title: newTitle,
+        url: newLinkUrl,
+        desc: newDescription,
+        rating: newRating,
+      };
+
+      //create bookmark method
+      api.createBookmark(newBookmark)
+        .then( (newBookmark) => {
+          newBookmark.displayExtended = false;
+          console.log(newBookmark);
+          store.addBookmark(newBookmark);
+          $('#bookmark-title').val('');
+          $('#bookmark-url').val('');
+          $('#bookmark-rating').val('');
+          $('#bookmark-description').val('');
+          render();
+        })
+        .catch(error => {
+          console.log('the error is: ' + error);
+          store.setError(error);
+          // renderList();
+        });
+
+      console.log('bookmark submitted!(in theory)');
+    });
+  }
+
+  function bindEventListeners() {
+    handleAddBookmark();
+    handleFilterList();
+    handleDeleteBookmark();
+    // handleExpandedView();
+  }
+
+  return {
+    render,
+    bindEventListeners,
+  };
+})();

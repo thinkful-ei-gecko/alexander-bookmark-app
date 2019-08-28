@@ -1,7 +1,7 @@
 'use strict';
 
 const api = (function(){
-  const baseUrl = 'http://thinkful-list-api.herokuapp.com/fukui';
+  const baseUrl = 'https://thinkful-list-api.herokuapp.com/fukui';
 
   function listApiFetch(...args){
     let error = false;
@@ -23,27 +23,36 @@ const api = (function(){
       });
   }
 
-  // function getList(){
-  //   return listApiFetch(`${baseUrl}/bookmarks`);
-  // }
+  function getList(){
+    return listApiFetch(`${baseUrl}/bookmarks`);
+  }
 
-  function createBookmark(newTitle, newUrlLink, newDescription, newRating) {
-    const newBookmark = {
-      title: newTitle,
-      urlLink: newUrlLink,
-      description: newDescription,
-      rating: newRating
-    };
+  function createBookmark(bookmark) {
+    let newBookmark = JSON.stringify(bookmark);
     console.log(newBookmark);
-    return listApiFetch( `${this.baseURL}/bookmarks`, {
+    // console.log(newBookmark);
+    return listApiFetch( 'https://thinkful-list-api.herokuapp.com/fukui/bookmarks', {
       method: 'POST',
-      headers: {'Content-Type':'application/json'},
+      headers: {
+        'Content-Type':'application/json'
+      },
       body: newBookmark
     });
   }
 
+  function deleteBookmark(id) {
+    return listApiFetch( `https://thinkful-list-api.herokuapp.com/fukui/bookmarks/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type':'application/json'
+      }
+    });
+  }
+
+
   return {
-    // getList,
-    createBookmark
+    getList,
+    createBookmark,
+    deleteBookmark
   };
 })();

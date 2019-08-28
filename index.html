@@ -18,13 +18,13 @@
             <a href='#' id="add-toggle">
                 <h2>Add bookmarks</h2>
             </a>
-        </section><!--bookmark-add-->
-
+        </section>
         <section id="bookmark-filter-rating" >
             <h2>Filter by Rating</h2>
             <form id="bookmark-filter-form">
                 <label for="bookmark-rating" class="bookmark-label">Rating</label>
                 <select id="bookmark-rating" name="bookmark-rating">
+                    <option value="0" disabled selected hidden>Set Filter Here</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
@@ -33,36 +33,10 @@
                 </select>
                 <button type="submit">Filter</button>
             </form>
-        </section><!--bookmark-filter-rating-->
-        <section id="bookmark-list">
+        </section>
+        <section id="your-bookmarks">
             <h2>Your Bookmarks</h2>
-            <ul id="bookmark-list">
-                <li id="bookmark-1" class="bookmark">
-                    <h3>Example 1</h3>
-                    <a href="http://alink.com">http://alink.com</a>
-                    <p class="bookmark-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                    <span class='rating-title'>Rating:</span>
-                    <span class="bookmark-rating" data-rating="1"></span>
-                    <a href="#" id="js-expand-bookmark-1"></a>
-                    <br>
-                    <button type="button" id="bookmark-1">Delete</button>
-                </li>
-                <li id="bookmark-2" class="bookmark">
-                    <h3>Example 2</h3>
-                    <span class='rating-title'>Rating:</span>
-                    <span class="bookmark-rating" data-rating="2"></span>
-                    <br>
-                    <button type="button" id="bookmark-2">Delete</button>
-                </li>
-                <li id="bookmark-3" class="bookmark">
-                    <h3>Example 3</h3>
-                    <span class='rating-title'>Rating:</span>
-                    <span class="bookmark-rating" data-rating="3"></span>
-                    <br>
-                    <button type="button" id="bookmark-3">Delete</button>
-                </li>
-            </ul>
-        </section><!--bookmark-list-->
+        </section>
     </main>
     <footer role="contentinfo">
         Created by Alex Fukui for Thinkful.
