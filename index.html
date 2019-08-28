@@ -10,13 +10,15 @@
 
 </head>
 <body>
+    <div class="container">
     <header role="banner">
+        <img src="images/mymarks-logo.svg" alt="logo for MyMarks" class="logo">
         <h1>MyMarks v. 0.0</h1>
     </header>
     <main>
         <section id="bookmark-add">
             <a href='#' id="add-toggle">
-                <h2>Add bookmarks</h2>
+                <h2>Add Bookmark</h2>
             </a>
         </section>
         <section id="bookmark-filter-rating" >
@@ -24,7 +26,7 @@
             <form id="bookmark-filter-form">
                 <label for="bookmark-rating" class="bookmark-label">Rating</label>
                 <select id="bookmark-rating" name="bookmark-rating">
-                    <option value="0" disabled selected hidden>Set Filter Here</option>
+                    <option value="null" disabled selected hidden>Set Filter Here</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
@@ -41,6 +43,7 @@
     <footer role="contentinfo">
         Created by Alex Fukui for Thinkful.
     </footer>
+</div>
     
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous" type="text/javascript"></script>
     <script src="scripts/api.js" type="text/javascript"></script>

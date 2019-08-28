@@ -3,9 +3,16 @@
 
 const store = (function() {
 
+  function _decorateBookmark( bookmark ) {
+    return Object.assign( bookmark, { expanded: false });
+  }
+
   const addBookmark = function(bookmark){
-    this.bookmarks.push(bookmark);
-    bookmarkList.render();
+    this.bookmarks.push(_decorateBookmark(bookmark));
+  };
+
+  const toggleExpandedView = function(bookmark) {
+    return bookmark.expanded = !bookmark.expanded;
   };
 
   const findById = function(id) {
@@ -16,6 +23,7 @@ const store = (function() {
     this.bookmarks = this.bookmarks.filter(bookmark => bookmark.id !== id);
   };
 
+//move to bookmark-list
   const toggleFormTemplate = function() {
     console.log('addFormTemplate firing up');
     const addFormTemplate = `
@@ -27,11 +35,11 @@ const store = (function() {
         <input id="bookmark-url" name="bookmark-url" class="bookmark-text-input" type="text" placeholder="Url (Validate string in url format, sanitized)" required>
   
         <fieldset id="bookmark-rating"><legend>Rating</legend>
-          <input type="radio" name="bookmark-rating" value="1">1</option>
-          <input type="radio" name="bookmark-rating" value="2">2</option>
-          <input type="radio" name="bookmark-rating" value="3">3</option>
-          <input type="radio" name="bookmark-rating" value="4">4</option>
-          <input type="radio" name="bookmark-rating" value="5">5</option>
+          <input type="radio" name="bookmark-rating" class="bookmark-add-rating" value="1"></option>
+          <input type="radio" name="bookmark-rating" class="bookmark-add-rating" value="2"></option>
+          <input type="radio" name="bookmark-rating" class="bookmark-add-rating" value="3"></option>
+          <input type="radio" name="bookmark-rating" class="bookmark-add-rating" value="4"></option>
+          <input type="radio" name="bookmark-rating" class="bookmark-add-rating" value="5"></option>
         </select>
         </fieldset>
 
@@ -50,13 +58,12 @@ const store = (function() {
   };
 
   const bookmarkAdd = function(newBookmark){
-    console.log('bookmarkAdd firing.');
     this.bookmarkList.push(newBookmark);
-    console.log('bookmark pushed.');
   };
 
   const setError= function(error){
-    $('main').prepend(`Error message: ${error}`);
+    $('.error').remove();
+    $('main').prepend(`<p class="error">Error: ${error}</p>`);
   };
 
   return {
@@ -65,6 +72,8 @@ const store = (function() {
     addBookmark,
     findAndDelete,
     toggleFormTemplate,
-    setError
+    toggleExpandedView,
+    setError,
+    findById
   };
 })();

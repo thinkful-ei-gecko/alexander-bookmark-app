@@ -2,7 +2,6 @@
 /* global bookmarkList, store, api $ */
 
 $(document).ready(function() {
-  bookmarkList.render();
   bookmarkList.bindEventListeners();
 
   api.getList().then(bookmarks => {

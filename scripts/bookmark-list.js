@@ -7,7 +7,7 @@ const bookmarkList = (function(){
   function render() {
     let bookmarks = [...store.bookmarks];
 
-    if (store.ratingFilter.active && store.ratingFilter.minimum !== 0) {
+    if (store.ratingFilter.active && store.ratingFilter.ratingMin !== 0) {
       bookmarks = bookmarks.filter(bookmark => bookmark.rating >= store.ratingFilter.ratingMin);
     }
 
@@ -16,32 +16,37 @@ const bookmarkList = (function(){
     $('#your-bookmarks h2').after(bookmarkTemplate);
   }
 
-  //Toggles an bookmark view from expanded to not.
-  // function handleExpandedView(){
-  //   console.log('handleExpandedView listening');
-  // }
-
   //Query list by rating, wash your hands.
   function handleFilterList() {
     console.log('handleFilterList listening');
     $('#bookmark-filter-form').submit( (event)=> {
       event.preventDefault();
       let minimum = $('#bookmark-rating').val();
-      console.log('handleFilterList fired');
-      if (!store.ratingFilter.active) {
-        store.ratingFilter.active = true;
+      console.log(minimum);
+      //initial fire condition when minimum isn't null
+      if (minimum === null) {
+        store.setError('Please select a valid rating value in the Filter by Rating section.');
+      }
+      if (minimum !== null) {
+        store.ratingFilter.active = !store.ratingFilter.active;
         store.ratingFilter.ratingMin = minimum;
         render();
-      } else {
+          $('#bookmark-filter-form button').after('<button id="cancel-filter">Remove</button>');
+      } else if (store.ratingFilter.active && store.ratingFilter.ratingMin !== minimum) {
+        console.log('bar');
         store.ratingFilter.ratingMin = minimum;
         render();
+        //Spits 
       }
     });
   }
 
   function handleFilterCancel() {
-    $('#cancel-filter').click( () => {
+    $('#bookmark-filter-form').on('click', '#cancel-filter', () => {
       store.ratingFilter.active = false;
+      store.ratingFilter.ratingMin = null;
+      $('#cancel-filter').remove();
+      $('#bookmark-rating').val('0');
       render();
     });
   }
@@ -60,6 +65,17 @@ const bookmarkList = (function(){
       .closest('.bookmark')
       .data('bookmark-id');
   }
+
+  function handleExpandedView() {
+    $('#your-bookmarks').on('click', '.toggle-expand', event => {
+      console.log('I work!');
+      const id = getIdFromElement(event.currentTarget);
+      const bookmark = store.findById(id);
+      store.toggleExpandedView(bookmark);
+      render();
+    });
+  }
+
 
   function handleDeleteBookmark() {
     console.log('handleDeleteBookmark listening');
@@ -82,34 +98,55 @@ const bookmarkList = (function(){
   }
 
   function generateBookmarkTemplate(bookmarks) {
-    const bookmarksHtml = bookmarks.map((bookmark) => generateBookmarkElement(bookmark));
-    bookmarksHtml.join('');
-    return `
+    if (!bookmarks.length) {
+      $('#empty-list').remove();
+      return '<p id="empty-list">There are no bookmarks. Add one to get started!</p>';
+    } else {
+      $('#empty-list').remove();
+      const bookmarksHtml = bookmarks.map((bookmark) => generateBookmarkElement(bookmark));
+      bookmarksHtml.join(' ');
+      return `
     <ul id="bookmark-list">
     ${bookmarksHtml}
     </ul>
     `;
+    }
   }
 
   function generateBookmarkElement(bookmark) {
-    //This is expanded view by default for testing.
-    let description = '<p class="bookmark-description">No description.</p>';
-    if (bookmark.desc){
-      description = `<p class="bookmark-description">${bookmark.desc}</p>`;
-    }
-    let rating = 'Unrated';
-    if (bookmark.rating){
-      rating = bookmark.rating;
-    }
-
-    return `<li data-bookmark-id="${bookmark.id}" class="bookmark">
-    <a href="#" class="expand-bookmark"><h3>${bookmark.title}</h3></a>
-      <a href="${bookmark.url}">${bookmark.url}</a>
-      ${description}
-      <span class="rating-title">Rating</span>
+    if (bookmark.expanded) {
+      let description = '<p class="bookmark-description">No description.</p>';
+      if (bookmark.desc){
+        description = `<p class="bookmark-description">${bookmark.desc}</p>`;
+      }
+      let rating = 'Unrated';
+      if (bookmark.rating){
+        rating = bookmark.rating;
+      }
+      return `<li data-bookmark-id="${bookmark.id}" class="bookmark">
+      <a class="toggle-expand"><img src="images/expanded.svg"><h3>${bookmark.title}</h3></a>
+        <a href="${bookmark.url}" class="bookmark-url">${bookmark.url}</a>
+        ${description}
+        <span class="rating-title">
+          Rating:
+          <span class="bookmark-rating" data-rating="${rating}">${rating}</span>
+        </span>
+        <button type="button" class="delete-bookmark">Delete</button>
+      </li>`;
+    } else {
+      let rating = 'Unrated';
+      if (bookmark.rating){
+        rating = bookmark.rating;
+      }
+      return `<li data-bookmark-id="${bookmark.id}" class="bookmark">
+      <a class="toggle-expand"><img src="images/condensed.svg"><h3>${bookmark.title}</h3></a>
+      <span class="rating-title">
+      Rating:
       <span class="bookmark-rating" data-rating="${rating}">${rating}</span>
-      <button type="button" class="delete-bookmark">Delete</button>
-    </li>`;
+    </span>
+        <button type="button" class="delete-bookmark">Delete</button>
+      </li>`;
+    }
   }
 
   //Renders add form
@@ -152,8 +189,9 @@ const bookmarkList = (function(){
   function bindEventListeners() {
     handleAddBookmark();
     handleFilterList();
+    handleFilterCancel()
     handleDeleteBookmark();
-    // handleExpandedView();
+    handleExpandedView();
   }
 
   return {
