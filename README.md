@@ -56,15 +56,3 @@ Use semantic HTML
 - Refer back to the lessons on accessibility, forms
 
 ***
-
-### LOG
-
- - 2019-08-26 07:28:28 - Initiating project on github after reading requirements.
-
- - 2019-08-26 07:42:11 - Created wireframe directory and populated with estimated app states.
-
- - 2019-08-26 07:49:58 - Added assignment requirements to README.me
-
- - 2019-08-26 11:18:10 - index.html wireframe composed. Structure for 'store' constant defined.
-
- 2019-08-26 23:26:20 - Reconfigured wireframe according to review, awaiting second review.
