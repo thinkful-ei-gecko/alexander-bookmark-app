@@ -7,8 +7,17 @@ const bookmarkList = (function(){
   function render() {
     let bookmarks = [...store.bookmarks];
 
-    if (store.ratingFilter.active && store.ratingFilter.ratingMin !== 0) {
+    //filter to minimum value
+    if (store.ratingFilter.active && store.ratingFilter.ratingMin >= 1) {
+      console.log(store.ratingFilter.ratingMin);
       bookmarks = bookmarks.filter(bookmark => bookmark.rating >= store.ratingFilter.ratingMin);
+      console.log(bookmarks);
+    }
+
+    //filter to unrated bookmarks
+    if (store.ratingFilter.active && store.ratingFilter.ratingMin === 'unrated') {
+      console.log('unrated rating select working!');
+      bookmarks = bookmarks.filter(bookmark => bookmark.rating === null);
     }
 
     const bookmarkTemplate = generateBookmarkTemplate(bookmarks);
@@ -23,31 +32,31 @@ const bookmarkList = (function(){
       event.preventDefault();
       let minimum = $('#bookmark-rating').val();
       console.log(minimum);
-      //initial fire condition when minimum isn't null
-      if (minimum === null) {
-        store.setError('Please select a valid rating value in the Filter by Rating section.');
-      }
-      if (minimum !== null) {
+      //When minimum is set and filter isn't already active, activate filter and set minimum, then render.
+      if ( ( minimum >= 1 || minimum ==='unrated') && store.ratingFilter.active === false) {
         store.ratingFilter.active = !store.ratingFilter.active;
         store.ratingFilter.ratingMin = minimum;
         render();
-          $('#bookmark-filter-form button').after('<button id="cancel-filter">Remove</button>');
-      } else if (store.ratingFilter.active && store.ratingFilter.ratingMin !== minimum) {
-        console.log('bar');
+      }
+      //When minimum is set and filter is active, don't touch filter activation but reset minimum, then render.
+      if (store.ratingFilter.active && minimum !== store.ratingFilter.ratingMin) {
         store.ratingFilter.ratingMin = minimum;
         render();
-        //Spits 
       }
-    });
-  }
+      //When minimum is unset and filter is active, change filter activation and unset minimum in store, then render.
+      if (store.ratingFilter.active && minimum === 'reset'){
+        store.ratingFilter.active = !store.ratingFilter.active;
+        store.ratingFilter.ratingMin = minimum;
+        render();
+      }
+      //initial fire condition when minimum isn't set
+      if (store.ratingFilter.active) {
+        $('option[value="reset"]').html('Unset Filter');
+      }
+      if (!store.ratingFilter.active) {
+        $('option[value="reset"]').html('Set Filter Here');
+      }
 
-  function handleFilterCancel() {
-    $('#bookmark-filter-form').on('click', '#cancel-filter', () => {
-      store.ratingFilter.active = false;
-      store.ratingFilter.ratingMin = null;
-      $('#cancel-filter').remove();
-      $('#bookmark-rating').val('0');
-      render();
     });
   }
 
@@ -113,6 +122,7 @@ const bookmarkList = (function(){
     }
   }
 
+  //This could be configured DRYer...
   function generateBookmarkElement(bookmark) {
     if (bookmark.expanded) {
       let description = '<p class="bookmark-description">No description.</p>';
@@ -167,12 +177,11 @@ const bookmarkList = (function(){
       //create bookmark method
       api.createBookmark(newBookmark)
         .then( (newBookmark) => {
-          newBookmark.displayExtended = false;
           console.log(newBookmark);
           store.addBookmark(newBookmark);
           $('#bookmark-title').val('');
           $('#bookmark-url').val('');
-          $('#bookmark-rating').val('');
+          $('input[name=bookmark-rating]:checked').prop('checked', false);
           $('#bookmark-description').val('');
           render();
         })
@@ -189,7 +198,6 @@ const bookmarkList = (function(){
   function bindEventListeners() {
     handleAddBookmark();
     handleFilterList();
-    handleFilterCancel()
     handleDeleteBookmark();
     handleExpandedView();
   }
