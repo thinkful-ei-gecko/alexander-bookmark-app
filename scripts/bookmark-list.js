@@ -5,10 +5,12 @@
 const bookmarkList = (function(){
 
   function render() {
+    console.log('render firing');
     let bookmarks = [...store.bookmarks];
 
     //filter to minimum value
     if (store.ratingFilter.active && store.ratingFilter.ratingMin >= 1) {
+      console.log('case 1 firing');
       console.log(store.ratingFilter.ratingMin);
       bookmarks = bookmarks.filter(bookmark => bookmark.rating >= store.ratingFilter.ratingMin);
       console.log(bookmarks);
@@ -31,32 +33,34 @@ const bookmarkList = (function(){
     $('#bookmark-filter-form').submit( (event)=> {
       event.preventDefault();
       let minimum = $('#bookmark-rating').val();
-      console.log(minimum);
-      //When minimum is set and filter isn't already active, activate filter and set minimum, then render.
-      if ( ( minimum >= 1 || minimum ==='unrated') && store.ratingFilter.active === false) {
-        store.ratingFilter.active = !store.ratingFilter.active;
-        store.ratingFilter.ratingMin = minimum;
-        render();
-      }
-      //When minimum is set and filter is active, don't touch filter activation but reset minimum, then render.
-      if (store.ratingFilter.active && minimum !== store.ratingFilter.ratingMin) {
-        store.ratingFilter.ratingMin = minimum;
-        render();
-      }
-      //When minimum is unset and filter is active, change filter activation and unset minimum in store, then render.
-      if (store.ratingFilter.active && minimum === 'reset'){
-        store.ratingFilter.active = !store.ratingFilter.active;
-        store.ratingFilter.ratingMin = minimum;
-        render();
-      }
-      //initial fire condition when minimum isn't set
-      if (store.ratingFilter.active) {
-        $('option[value="reset"]').html('Unset Filter');
-      }
+      //If there isn't an active filter...
       if (!store.ratingFilter.active) {
-        $('option[value="reset"]').html('Set Filter Here');
+        if (minimum >= 1 || minimum ==='unrated') {
+          $('option[value="reset"]').html('Unset Filter');
+          store.ratingActiveToggle();
+          store.ratingMinimumReset(minimum);
+          render();
+        }
+        //When minimum is unset and filter is already active, change filter activation and unset minimum in store, then render list.
+        if (minimum === 'reset'){
+          $('option[value="reset"]').html('Set Filter Here');
+          store.ratingActiveToggle();
+          store.ratingMinimumReset(minimum);
+          render();
+        }
       }
-
+      //If submitted when filter already active...
+      if (store.ratingFilter.active) {
+        //If minimum is different, change store minimum and render.
+        if (minimum !== store.ratingFilter.ratingMin) {
+          $('option[value="reset"]').html('Unset Filter');
+          store.ratingMinimumReset(minimum);
+          render();
+        }
+        if (minimum === 'reset') {
+          $('option[value="reset"]').html('Set Filter Here');
+        }
+      }
     });
   }
 
@@ -64,6 +68,36 @@ const bookmarkList = (function(){
   function handleAddBookmark() {
     $('#bookmark-add a').click( () => {
       store.toggleFormTemplate();
+      console.log('addFormTemplate firing up');
+      const addFormTemplate = `
+        <form id="bookmark-add-form">
+          <label for="bookmark-title" class="bookmark-label">Title</label>
+          <input id="bookmark-title" name="bookmark-title" class="bookmark-text-input" type="text" placeholder="Title (Valid string)" required>
+          
+          <label for="bookmark-url" class="bookmark-label">Url</label>
+          <input id="bookmark-url" name="bookmark-url" class="bookmark-text-input" type="text" placeholder="Url (Validate string in url format, sanitized)" required>
+    
+          <fieldset id="bookmark-rating"><legend>Rating</legend>
+            <input type="radio" name="bookmark-rating" class="bookmark-add-rating" value="1"></option>
+            <input type="radio" name="bookmark-rating" class="bookmark-add-rating" value="2"></option>
+            <input type="radio" name="bookmark-rating" class="bookmark-add-rating" value="3"></option>
+            <input type="radio" name="bookmark-rating" class="bookmark-add-rating" value="4"></option>
+            <input type="radio" name="bookmark-rating" class="bookmark-add-rating" value="5"></option>
+          </select>
+          </fieldset>
+
+          <label for="bookmark-description" class="bookmark-label">Description</label>
+          <textarea id="bookmark-description" name="bookmark-description" class="bookmark-text-area" rows="4" cols="50" placeholder="A short description goes here."></textarea>
+          
+          <button type="submit">Add Bookmark</button>
+        </form>
+        `;
+      //If no form, add; else remove added form.
+      if ( $('#bookmark-add-form').length ) {
+        $('#bookmark-add-form').remove();
+      } else {
+        $('#bookmark-add a').after(addFormTemplate);
+      }
       //Listens for bookmark submit.
       handleSubmitAddBookmark();
     });

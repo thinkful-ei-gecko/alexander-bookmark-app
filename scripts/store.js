@@ -23,42 +23,18 @@ const store = (function() {
     this.bookmarks = this.bookmarks.filter(bookmark => bookmark.id !== id);
   };
 
-//move to bookmark-list
-  const toggleFormTemplate = function() {
-    console.log('addFormTemplate firing up');
-    const addFormTemplate = `
-      <form id="bookmark-add-form">
-        <label for="bookmark-title" class="bookmark-label">Title</label>
-        <input id="bookmark-title" name="bookmark-title" class="bookmark-text-input" type="text" placeholder="Title (Valid string)" required>
-        
-        <label for="bookmark-url" class="bookmark-label">Url</label>
-        <input id="bookmark-url" name="bookmark-url" class="bookmark-text-input" type="text" placeholder="Url (Validate string in url format, sanitized)" required>
-  
-        <fieldset id="bookmark-rating"><legend>Rating</legend>
-          <input type="radio" name="bookmark-rating" class="bookmark-add-rating" value="1"></option>
-          <input type="radio" name="bookmark-rating" class="bookmark-add-rating" value="2"></option>
-          <input type="radio" name="bookmark-rating" class="bookmark-add-rating" value="3"></option>
-          <input type="radio" name="bookmark-rating" class="bookmark-add-rating" value="4"></option>
-          <input type="radio" name="bookmark-rating" class="bookmark-add-rating" value="5"></option>
-        </select>
-        </fieldset>
-
-        <label for="bookmark-description" class="bookmark-label">Description</label>
-        <textarea id="bookmark-description" name="bookmark-description" class="bookmark-text-area" rows="4" cols="50" placeholder="A short description goes here."></textarea>
-        
-        <button type="submit">Add Bookmark</button>
-      </form>
-      `;
-      //If no form, add; else remove added form.
-    if ( $('#bookmark-add-form').length ) {
-      $('#bookmark-add-form').remove();
-    } else {
-      $('#bookmark-add a').after(addFormTemplate);
-    }
+  const ratingActiveToggle = function() {
+    console.log('rating toggle firing!');
+    return this.ratingFilter.active = !this.ratingFilter.active;
+    // console.log(this.ratingFilter.active);
   };
 
-  const bookmarkAdd = function(newBookmark){
-    this.bookmarkList.push(newBookmark);
+  const ratingMinimumReset = function(newMinimum) {
+    this.ratingFilter.ratingMin = newMinimum;
+  };
+
+  const toggleFormTemplate = function() {
+    this.showAddFormTemplate = !this.showAddFormTemplate;
   };
 
   const setError= function(error){
@@ -69,9 +45,12 @@ const store = (function() {
   return {
     bookmarks: [],
     ratingFilter: { active: false, ratingMin: 0},
+    ratingActiveToggle,
+    ratingMinimumReset,
+    showAddFormTemplate: false,
+    toggleFormTemplate,
     addBookmark,
     findAndDelete,
-    toggleFormTemplate,
     toggleExpandedView,
     setError,
     findById
